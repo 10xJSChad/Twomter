@@ -50,33 +50,41 @@ def handle_twomt():
     replyTo = int(request.values.get("replyTo"))
     userpage = request.values.get("profile")
     twomts.postTwomt(auth.getIdFromUsername(username), content, replyTo, username)
+    print("twomt handled")
     if userpage != None:
         return(profile(userpage))
     return index()
 
+@app.route('/get_more_twomts', methods=["POST"])
+def get_more_twomts():
+    offset = int(request.values.get('offset'))
+    profileUsername = request.values.get('profileUsername')
+    if profileUsername != None:
+        return(profile(profileUsername, offset))
+    return index(offset)
+
 @app.route('/')
-def index(): #ALLOW TO VIEW WITHOUT BEING LOGGED IN
+def index(offset=0): #ALLOW TO VIEW WITHOUT BEING LOGGED IN
     userInfo = getUserCookies()
     if not auth.isUserLoggedIn(userInfo[0], userInfo[1], userInfo[2])[0]:
         return render_template('login.html')
 
     user = getUser()
-    twomtsToDisplay = twomts.getTwomts()
+    twomtsToDisplay = twomts.getTwomts(None, offset)
     
-    resp = make_response(render_template('index.html', username=user.username, twomts=twomtsToDisplay))
+    resp = make_response(render_template('index.html', username=user.username, twomts=twomtsToDisplay, offset=offset,))
     return resp
 
 @app.route('/profile/<url>')
-def profile(url):
+def profile(url, offset=0):
     content = auth.getUserByName(url)
     userInfo = getUserCookies()
-    username = "N/A"
     if auth.isUserLoggedIn(userInfo[0], userInfo[1], userInfo[2])[0]:
         user = getUser()
         username = user.username
     id = content[0][0]; profileUsername = content[0][1]; profileBio = content[0][5]
-    twomtsToDisplay = twomts.getTwomts(id)
-    return render_template('/profile/profile.html', profileUsername=profileUsername, profileBio=profileBio, username=username, twomts=twomtsToDisplay)
+    twomtsToDisplay = twomts.getTwomts(id, offset)
+    return render_template('/profile/profile.html', profileUsername=profileUsername, profileBio=profileBio, username=username, twomts=twomtsToDisplay, offset=offset)
     
 sys.path.append('/AnaAuth')
 sys.path.append('/Twomts')

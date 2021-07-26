@@ -19,7 +19,6 @@ function showFirstThreeReplies(){
 function showAllReplies(id){
     let x = document.getElementsByClassName("twomtResponses");
     let y = document.getElementsByClassName("showResponsesButton");
-
     for(let i = 0; i < x.length; i++){
         replyID = x[i].getAttribute("data-value");
         if(replyID == id){
@@ -50,3 +49,5 @@ function showReplyBox(id){
 window.addEventListener('load', function () {
     showFirstThreeReplies();
   })
+
+  

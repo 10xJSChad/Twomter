@@ -25,20 +25,20 @@ class twomtsHandler():
         builtTwomt = twomtsClass.twomt(twomt[0], twomt[1], twomt[2], twomt[3], twomt[4], twomt[5])
         return builtTwomt
 
-    def getTwomts(self, filter=None): #INCREASE LIMITS AND ADD 'SHOW MORE' BUTTONS
+    def getTwomts(self, filter=None, offset=0): #INCREASE LIMITS AND ADD 'SHOW MORE' BUTTONS
         if(filter == None):
-            cmd = ("SELECT * FROM Twomts WHERE replyTo = -1 ORDER BY id DESC LIMIT 15 ")
-            self.cursor.execute(cmd)
+            cmd = ("SELECT * FROM Twomts WHERE replyTo = -1 ORDER BY id DESC LIMIT 15 OFFSET %s")
+            self.cursor.execute(cmd, (offset,))
         else:
-            cmd = ("SELECT * FROM Twomts WHERE replyTo = -1 AND poster = %s ORDER BY id DESC LIMIT 15 ")
-            self.cursor.execute(cmd, (filter,))
+            cmd = ("SELECT * FROM Twomts WHERE replyTo = -1 AND poster = %s ORDER BY id DESC LIMIT 15 OFFSET %s")
+            self.cursor.execute(cmd, (filter, offset,))
             
         result = self.cursor.fetchall()
         twomtsToReturn = []
         for x in result: 
             builtTwomt = self.buildTwomt(x)
-            cmd = ("SELECT * FROM Twomts WHERE replyTo = %s ORDER BY id DESC LIMIT 15 ")
-            self.cursor.execute(cmd, (builtTwomt.id, ))
+            cmd = ("SELECT * FROM Twomts WHERE replyTo = %s ORDER BY id DESC LIMIT 15")
+            self.cursor.execute(cmd, (builtTwomt.id,))
             result = self.cursor.fetchall()
             for y in result: 
                 builtTwomt.replies.append(self.buildTwomt(y))

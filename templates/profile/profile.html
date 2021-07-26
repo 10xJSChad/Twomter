@@ -36,7 +36,7 @@
           <a href></a>
           <div class="replyBox" id={{x.id}}>
             <div class="line"></div>
-            <form method="POST" action="handle_twomt">
+            <form method="POST" action="/handle_twomt">
               <p><textarea type="text" class="postTwomtBox" name="twomt"></textarea></p>
               <input type="hidden" name="replyTo" value={{x.id}}> 
               <p><input type="submit" value="Submit"></p>
@@ -48,5 +48,10 @@
           {% endif %} 
       </div>
     {% endfor %}
+    <form method ="POST" action="/get_more_twomts">
+      <input class="nextButton" type="submit" name="Next" value="Next"/>
+      <input type="hidden" name="offset" value="{{offset + 15}}"/>
+      <input type="hidden" name="profileUsername" value="{{profileUsername}}"/>
+    </form>
   </body>
 </html>
