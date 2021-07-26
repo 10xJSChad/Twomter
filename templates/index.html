@@ -1,0 +1,52 @@
+<script src="../static/scripts/indexScripts.js"></script>
+
+<!doctype html>
+<html>
+  <head>
+    <title>Index</title>
+    <link rel="stylesheet" href="../static/stylesheets/styles.css">
+  </head>
+  
+  <body>
+    <div class="topBar">
+      <a href=""> <img class="logoImage" src="../static/assets/twomty.png"> </a>
+    </div>
+
+    <div class="mainContainer">
+      <form method="POST" action="handle_twomt">
+        <div class="postTwomtContainer">
+          <h1>Welcome, {{username}}!</h1>
+          <p><textarea type="text" class="postTwomtBox" name="twomt"></textarea></p>
+          <input type="hidden" name="replyTo" value=-1> 
+          <p><input type="submit" value="Submit"></p>
+        </div>
+      </form>
+      {% for x in twomts %}   
+        <div class="twomtBox" data-value="{{x.id}}">
+          <p class="twomtPosterAndDate"><a href="/profile/{{x.posterUsername}}">{{x.posterUsername}}</a>, {{x.date}}</p>
+          <p class="twomtContent">{{x.content}}</p>
+          {% for y in x.replies %}
+              <div class="twomtResponses" data-value="{{x.id}}">
+                <div class="line"></div>
+                <p class="twomtPosterAndDate"><a href="/profile/{{y.posterUsername}}">{{y.posterUsername}}</a>, {{y.date}}</p>
+                <p class="twomtContent">{{y.content}}</p>
+              </div>
+            {% endfor %}
+            <a href></a>
+            <div class="replyBox" id={{x.id}}>
+              <div class="line"></div>
+              <form method="POST" action="handle_twomt">
+                <p><textarea type="text" class="postTwomtBoxReply" name="twomt"></textarea></p>
+                <input type="hidden" name="replyTo" value={{x.id}}> 
+                <p><input type="submit" value="Submit"></p>
+              </form>
+            </div>
+            <input type="button" value="Reply" class="replyBtn" onclick="showReplyBox({{x.id}})"/>
+            {% if x.replies|length > 3 %}
+              <input type = "button" onclick = "showAllReplies({{x.id}})" data-value={{x.id}} class="showResponsesButton" value = "Show all responses"> 
+            {% endif %} 
+        </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>

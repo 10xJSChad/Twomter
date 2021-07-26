@@ -1,0 +1,83 @@
+body{
+    background-color: aquamarine;
+}
+
+a{
+    text-decoration: none;
+}
+.twomtBox{
+    background-color: white;
+    width: 45.5%;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    border-radius: 8px;
+    margin: 0 auto;
+    
+}
+
+.postTwomtContainer{
+    background-color: white;
+    width: 45.5%;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    border-radius: 8px;
+    margin: 0 auto;
+}
+.twomtPosterAndDate{
+    font-weight: bold;
+}
+
+.topBar{
+    margin: 0 auto;
+}
+
+.logoImage{
+    margin: 0 auto; 
+    width: 80px;
+    height: 80px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.postTwomtBoxReply{
+    width: 100%;
+}
+
+.postTwomtBox{
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    border-radius: 8px;
+    width: 100%;
+}
+
+.replyBox{
+    display: none;
+}
+
+.twomtResponses{
+    display: none;
+}
+
+.line{
+    width: 100%;
+    border-bottom: 1px solid black;
+    }
+
+.profileBox{
+    background-color: white;
+    width: 45.5%;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    border-radius: 8px;
+    margin: 0 auto;
+}
+
+.profileUsername{
+    font-weight: bold;
+    font-size: 24px;
+}
