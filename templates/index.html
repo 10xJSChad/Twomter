@@ -16,9 +16,10 @@
       <form method="POST" action="/handle_twomt">
         <div class="postTwomtContainer">
           <h1>Welcome, {{username}}!</h1>
-          <p><textarea type="text" class="postTwomtBox" name="twomt"></textarea></p>
+          <p><textarea type="text" class="postTwomtBox" id="twomtBox" name="twomt"></textarea></p>
+          <p id="characterCountText">Characters left: 140</p>
           <input type="hidden" name="replyTo" value=-1> 
-          <p><input type="submit" value="Submit"></p>
+          <p><input type="submit" id="postTwomtButton" value="Submit"></p>
         </div>
       </form>
       {% for x in twomts %}   
@@ -36,9 +37,11 @@
             <div class="replyBox" id={{x.id}}>
               <div class="line"></div>
               <form method="POST" action="/handle_twomt">
-                <p><textarea type="text" class="postTwomtBoxReply" name="twomt"></textarea></p>
+                <p><textarea type="text" id="twomtBox{{x.id}}" class="postTwomtBoxReply" name="twomt"></textarea></p>
+                <p id="characterCountText{{x.id}}">Characters left: 140</p>
                 <input type="hidden" name="replyTo" value={{x.id}}> 
-                <p><input type="submit" value="Submit"></p>
+                <input type="hidden" name="offset" value="{{offset}}"/>
+                <p><input type="submit" id="postTwomtButton{{x.id}}" value="Submit"></p>
               </form>
             </div>
             <input type="button" value="Reply" class="replyBtn" onclick="showReplyBox({{x.id}})"/>

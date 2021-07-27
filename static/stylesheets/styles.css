@@ -16,6 +16,9 @@ a{
     
 }
 
+.twomtContent{
+    word-wrap: break-word;
+}
 .postTwomtContainer{
     background-color: white;
     width: 45.5%;

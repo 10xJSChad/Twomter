@@ -10,7 +10,8 @@ auth = AnaAuth.AnaAuthentication("localhost", "root", "", "twomter", True)
 twomts = twomtsHandler.twomtsHandler("localhost", "root", "", "twomter", True) 
 
 def verifyTwomt(twomt):
-    return True
+    if len(twomt) <= 140: return True
+    return False
 
 def getUserCookies():
     username = request.cookies.get('username')
@@ -48,12 +49,14 @@ def handle_twomt():
     username = getUser().username
     content = request.values.get("twomt")
     replyTo = int(request.values.get("replyTo"))
-    userpage = request.values.get("profile")
-    twomts.postTwomt(auth.getIdFromUsername(username), content, replyTo, username)
-    print("twomt handled")
-    if userpage != None:
-        return(profile(userpage))
-    return index()
+    profileUsername = request.values.get("profileUsername")
+    offset = 0
+    if request.values.get('offset') != None:
+        offset = int(request.values.get('offset'))
+    if verifyTwomt(content): twomts.postTwomt(auth.getIdFromUsername(username), content, replyTo, username)
+    if profileUsername != None:
+        return(profile(profileUsername, offset))
+    return index(offset)
 
 @app.route('/get_more_twomts', methods=["POST"])
 def get_more_twomts():
@@ -77,6 +80,7 @@ def index(offset=0): #ALLOW TO VIEW WITHOUT BEING LOGGED IN
 
 @app.route('/profile/<url>')
 def profile(url, offset=0):
+    if offset == None: offset = 0
     content = auth.getUserByName(url)
     userInfo = getUserCookies()
     if auth.isUserLoggedIn(userInfo[0], userInfo[1], userInfo[2])[0]:

@@ -5,6 +5,7 @@ function showFirstThreeReplies(){
     for(let i = 0; i < x.length; i++){
         let count = 0;
         twomtID = x[i].getAttribute("data-value");
+        addListener('twomtBox' + twomtID, 'characterCountText' + twomtID, 'postTwomtButton' + twomtID)
         for(let j = 0; j < y.length; j++){
             replyID = y[j].getAttribute("data-value");
             if(twomtID == replyID){
@@ -48,6 +49,18 @@ function showReplyBox(id){
 
 window.addEventListener('load', function () {
     showFirstThreeReplies();
+    addListener('twomtBox', 'characterCountText', 'postTwomtButton')
   })
 
-  
+  function addListener(twomtBoxID, characterCountTextID, postTwomtButtonID){
+    document.getElementById(twomtBoxID).onkeyup = function () {
+        document.getElementById(characterCountTextID).innerHTML = "Characters left: " + (140 - this.value.length);
+        if(this.value.length > 140){
+            document.getElementById(characterCountTextID).style.color = "red";
+            document.getElementById(postTwomtButtonID).disabled = true;
+        } else {
+            document.getElementById(characterCountTextID).style.color = "black";
+            document.getElementById(postTwomtButtonID).disabled = false;
+        }
+  }
+}
