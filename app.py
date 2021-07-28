@@ -4,6 +4,7 @@ import sys
 import mysql.connector
 from AnaAuth import AnaAuth
 from Twomts import twomtsHandler
+import simpleHashSalt
 
 app = Flask(__name__)
 auth = AnaAuth.AnaAuthentication("localhost", "root", "", "twomter", True) 
@@ -12,6 +13,13 @@ twomts = twomtsHandler.twomtsHandler("localhost", "root", "", "twomter", True)
 def verifyTwomt(twomt):
     if len(twomt) <= 140: return True
     return False
+
+def verifyRegistration(username, password):
+    if (len(username) < 4 or len(password) < 5):
+        return(False, "Username or password too short!")
+    if username == "None" or not username.isalnum(): return(False, "Invalid username") #Don't know if this is necessary, probably not
+    if len(username) > 13: return(False, "Username is too long")
+    return(True, "Registration success!")
 
 def getUserCookies():
     username = request.cookies.get('username')
@@ -23,25 +31,30 @@ def getUser():
     cookies = getUserCookies()
     return(auth.getUserBySession(cookies[1], cookies[2], True))
 
+def isLoggedIn():
+    userInfo = getUserCookies()
+    if not auth.isUserLoggedIn(userInfo[0], userInfo[1], userInfo[2])[0]:
+        return False
+    return True
+
 @app.route('/login')
 def loginPage():
     return render_template('login.html')
 
 @app.route('/handle_login', methods=["POST"])
-def handle_login():
-    username = request.values.get("username")
-    password = request.values.get("password")
+def handle_login(username=None, password=None):
+    if(username==None): 
+        username = request.values.get("username")
+        password = simpleHashSalt.hash(request.values.get("password"))
     ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
     user = auth.verifyLogin(username, password, ip)
     if user[0] == True:
-        resp = make_response(render_template('login_success.html'))
         user = user[1]
+        resp = make_response(render_template('index.html', username=user.username, twomts=twomts.getTwomts(None, 0), offset=0))
         resp.set_cookie('username', user.username)
         resp.set_cookie('ip', user.ip)
         resp.set_cookie('token', user.token)
         return resp
-        
-
     return render_template('login.html')
 
 @app.route('/handle_twomt', methods=["POST"])
@@ -90,6 +103,24 @@ def profile(url, offset=0):
     twomtsToDisplay = twomts.getTwomts(id, offset)
     return render_template('/profile/profile.html', profileUsername=profileUsername, profileBio=profileBio, username=username, twomts=twomtsToDisplay, offset=offset)
     
+@app.route('/register')
+def register():
+    if isLoggedIn(): return index()
+    return render_template('register.html', result=(True, "N/A"))
+
+@app.route('/handle_registration', methods=["POST"])
+def handle_registration():
+    if isLoggedIn(): return index()
+    username = request.values.get('username')
+    password = request.values.get('password')
+    result = verifyRegistration(username, password)
+    if result[0] == True: createUserResult = auth.createUser(username, simpleHashSalt.hash(password))
+    if not createUserResult:
+        result = (False, "This username is already taken")
+    if result[0] == False:
+        return render_template('register.html', result=result)
+    else: return handle_login(username, simpleHashSalt.hash(password))
+
 sys.path.append('/AnaAuth')
 sys.path.append('/Twomts')
 app.run(),

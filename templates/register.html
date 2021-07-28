@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Register</title>
+    <link rel="stylesheet" href="../static/stylesheets/styles.css">
+    <script src="../static/scripts/registerScript.js"></script>
+  </head>
+  <body>
+    <center><h1>Register</h1></center>
+    <div class="loginOrRegister">
+        <form method="POST" action="handle_registration">
+            {% if not result[0] %}
+                <p style='text-align: center'>Username already taken</p>
+            {% endif %}
+            <p style='text-align: center'>Username</p>
+            <p><input type="text" class="center" id="username" name="username"></p>
+            <p id="usernameShort" style="text-align: center; font-size: 14px; display:none; color: red;">Username too short</p>
+            <p style='text-align: center'> Password </p>
+            <p><input type="password" class="center" id="password" name="password"></p>
+            <p id="passwordShort" style="text-align: center; font-size: 14px; display:none; color: red;">Password too short</p>
+            <p><input id="submit" type="submit" class="center" value="Submit"></p>
+        </form>
+    </div>
+  </body>
+</html>

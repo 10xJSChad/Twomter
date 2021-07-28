@@ -2,13 +2,18 @@
 <html>
   <head>
     <title>Login</title>
+    <link rel="stylesheet" href="../static/stylesheets/styles.css">
   </head>
   <body>
-    <h1>Login</h1>
-    <form method="POST" action="handle_login">
-      <p><input type="text" name="username"></p>
-      <p><input type="password" name="password"></p>
-      <p><input type="submit" value="Submit"></p>
-    </form>
+    <center><h1>Login</h1></center>
+    <div class="loginOrRegister">
+      <form method="POST" action="handle_login">
+        <p style='text-align: center'>Username</p>
+        <p><input type="text" class="center" id="username" name="username"></p>
+        <p style='text-align: center'> Password </p>
+        <p><input type="password" class="center" id="password" name="password"></p>
+        <p><input id="submit" type="submit" class="center" value="Submit"></p>
+      </form>
+  </div>
   </body>
 </html>
