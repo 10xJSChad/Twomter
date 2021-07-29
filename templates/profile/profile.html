@@ -16,10 +16,14 @@
       <p class="profileUsername">{{profileUsername}}</p>
       <p class="profileBio">{{profileBio}}</p>
       {% if username == profileUsername %}
+      <form method="POST" action="/handle_twomt">
         <p><textarea type="text" class="postTwomtBox" id="twomtBox" name="twomt"></textarea></p>
         <p id="characterCountText">Characters left: 140</p>
         <input type="hidden" name="replyTo" value=-1> 
+        <input type="hidden" name="offset" value="{{offset}}"/>
+        <input type="hidden" name="profileUsername" value="{{profileUsername}}"/>
         <p><input type="submit" id="postTwomtButton" value="Submit"></p>
+      </form>
       {% endif %}
     </div>
 
@@ -33,8 +37,7 @@
               <p class="twomtPosterAndDate"><a href="/profile/{{y.posterUsername}}">{{y.posterUsername}}</a>, {{y.date}}</p>
               <p class="twomtContent">{{y.content}}</p>
             </div>
-          {% endfor %}
-          <a href></a>
+        {% endfor %}
           <div class="replyBox" id={{x.id}}>
             <div class="line"></div>
             <form method="POST" action="/handle_twomt">
@@ -46,7 +49,9 @@
               <p><input type="submit" id="postTwomtButton{{x.id}}" value="Submit"></p>
             </form>
           </div>
-          <input type="button" value="Reply" class="replyBtn" onclick="showReplyBox({{x.id}})"/>
+          {% if username != None %}
+            <input type="button" value="Reply" class="replyBtn" onclick="showReplyBox({{x.id}})"/>
+          {% endif %}
           {% if x.replies|length > 3 %}
             <input type = "button" onclick = "showAllReplies({{x.id}})" data-value={{x.id}} class="showResponsesButton" value = "Show all responses"> 
           {% endif %} 

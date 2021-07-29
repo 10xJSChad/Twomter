@@ -81,24 +81,23 @@ def get_more_twomts():
 
 @app.route('/')
 def index(offset=0): #ALLOW TO VIEW WITHOUT BEING LOGGED IN
-    userInfo = getUserCookies()
-    if not auth.isUserLoggedIn(userInfo[0], userInfo[1], userInfo[2])[0]:
-        return render_template('login.html')
-
     user = getUser()
+    if user == None: username = None
+    else: username = user.username
     twomtsToDisplay = twomts.getTwomts(None, offset)
     
-    resp = make_response(render_template('index.html', username=user.username, twomts=twomtsToDisplay, offset=offset,))
+    resp = make_response(render_template('index.html', username=username, twomts=twomtsToDisplay, offset=offset,))
     return resp
 
 @app.route('/profile/<url>')
 def profile(url, offset=0):
     if offset == None: offset = 0
     content = auth.getUserByName(url)
-    userInfo = getUserCookies()
-    if auth.isUserLoggedIn(userInfo[0], userInfo[1], userInfo[2])[0]:
-        user = getUser()
-        username = user.username
+
+    user = getUser()
+    if user == None: username = None
+    else: username = user.username
+
     id = content[0][0]; profileUsername = content[0][1]; profileBio = content[0][5]
     twomtsToDisplay = twomts.getTwomts(id, offset)
     return render_template('/profile/profile.html', profileUsername=profileUsername, profileBio=profileBio, username=username, twomts=twomtsToDisplay, offset=offset)
