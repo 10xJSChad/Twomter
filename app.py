@@ -11,6 +11,7 @@ auth = AnaAuth.AnaAuthentication("localhost", "root", "", "twomter", True)
 twomts = twomtsHandler.twomtsHandler("localhost", "root", "", "twomter", True) 
 
 def verifyTwomt(twomt):
+    if len(twomt.replace(" ", "")) == 0: return False
     if len(twomt) <= 140: return True
     return False
 
@@ -40,6 +41,13 @@ def isLoggedIn():
 @app.route('/login')
 def loginPage():
     return render_template('login.html')
+
+@app.route('/logout')
+def logoutPage():
+    if isLoggedIn():
+        username = getUser().username
+        auth.logUserOut(username)
+    return index()
 
 @app.route('/handle_login', methods=["POST"])
 def handle_login(username=None, password=None):
@@ -80,7 +88,7 @@ def get_more_twomts():
     return index(offset)
 
 @app.route('/')
-def index(offset=0): #ALLOW TO VIEW WITHOUT BEING LOGGED IN
+def index(offset=0):
     user = getUser()
     if user == None: username = None
     else: username = user.username
@@ -101,7 +109,13 @@ def profile(url, offset=0):
     id = content[0][0]; profileUsername = content[0][1]; profileBio = content[0][5]
     twomtsToDisplay = twomts.getTwomts(id, offset)
     return render_template('/profile/profile.html', profileUsername=profileUsername, profileBio=profileBio, username=username, twomts=twomtsToDisplay, offset=offset)
-    
+
+@app.route('/profile/<url>/settings')
+def profileSettings(url):
+    user = getUser()
+    if user == None or user.username != url: return(index())
+    return render_template('/profile/profileSettings.html', username=user.username, bio=user.bio)
+
 @app.route('/register')
 def register():
     if isLoggedIn(): return index()
@@ -119,6 +133,15 @@ def handle_registration():
     if result[0] == False:
         return render_template('register.html', result=result)
     else: return handle_login(username, simpleHashSalt.hash(password))
+
+@app.route('/update_bio', methods=['POST'])
+def update_bio():
+    user = getUser()
+    if user == None: return(index())
+    newBio = request.values.get('twomt')
+    user.bio = newBio
+    auth.updateUser(user)
+    return profile(user.username)
 
 sys.path.append('/AnaAuth')
 sys.path.append('/Twomts')

@@ -1,19 +1,33 @@
-<script src="../static/scripts/indexScripts.js"></script>
+<script src="/static/scripts/indexScripts.js"></script>
 
 <!doctype html>
 <html>
   <head>
     <title>Profile</title>
-    <link rel="stylesheet" href="../static/stylesheets/styles.css">
+    <link rel="stylesheet" href="/static/stylesheets/styles.css">
   </head>
 
   <body>
     <div class="topBar">
-      <a href="../"> <img class="logoImage" src="../static/assets/twomty.png"> </a>
+      <a href="/"> <img class="logoImage" src="/static/assets/twomty.png"> </a>
     </div>
-
+    {% if username == None %}
+    <center>
+    <p class="center"><a href="/login">Login</a> | <a href="/register">Register</a></p>
+    </center>
+    {% endif %}
+    {% if username != None %}
+    <center>
+      <p class="center"><a href="/logout">Log out</a></p>
+    </center>
+    {% endif %}
     <div class="profileBox">
-      <p class="profileUsername">{{profileUsername}}</p>
+      <div class="profileNameAndSettings" style="margin-top: 21px;">
+        <p class="profileUsername" style="display: inline;">{{profileUsername}}</p>
+        {% if username != None %}
+        <p class="settingsText"><a href="/profile/{{username}}/settings">settings</a></p>
+        {% endif %}
+      </div>
       <p class="profileBio">{{profileBio}}</p>
       {% if username == profileUsername %}
       <form method="POST" action="/handle_twomt">
@@ -53,7 +67,7 @@
             <input type="button" value="Reply" class="replyBtn" onclick="showReplyBox({{x.id}})"/>
           {% endif %}
           {% if x.replies|length > 3 %}
-            <input type = "button" onclick = "showAllReplies({{x.id}})" data-value={{x.id}} class="showResponsesButton" value = "Show all responses"> 
+            <input type="button" onclick = "showAllReplies({{x.id}})" data-value={{x.id}} class="showResponsesButton" value = "Show all responses"> 
           {% endif %} 
       </div>
     {% endfor %}

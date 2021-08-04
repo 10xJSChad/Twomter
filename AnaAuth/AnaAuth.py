@@ -22,8 +22,8 @@ class AnaAuthentication():
     self.cursor = self.db.cursor()
 
   def updateUser(self, user):
-    cmd = "UPDATE users SET username=%s, password=%s, ip=%s, token=%s WHERE username=%s"
-    self.cursor.execute(cmd, (user.username, user.password, user.ip, user.token, user.username, ))
+    cmd = "UPDATE users SET username=%s, password=%s, ip=%s, token=%s, bio=%s WHERE username=%s"
+    self.cursor.execute(cmd, (user.username, user.password, user.ip, user.token, user.bio, user.username, ))
 
   def generateToken(self):
       tokenChars = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
@@ -35,7 +35,7 @@ class AnaAuthentication():
 
   def buildUser(self, result):
     if len(result) == 0: return None
-    user = userClass.user(result[0][1], result[0][2], result[0][3], result[0][4])
+    user = userClass.user(result[0][1], result[0][2], result[0][3], result[0][4], result[0][5])
     return user
 
   def getUserByName(self, username, returnUser=False):
@@ -53,6 +53,7 @@ class AnaAuthentication():
     result = self.cursor.fetchall()
     if returnUser:
       user = self.buildUser(result)
+      if(user != None and user.token == "NULL"): return None
       return user
     return(result)
 
@@ -68,6 +69,7 @@ class AnaAuthentication():
 
   def isUserLoggedIn(self, username, ip, token):
     user = self.getUserByName(username, True)
+    if token == "NULL": return(False, "Token is null")
     if user == None: return(False, "User does not exist")
     if user.ip == ip and user.token == token: return(True, user)
     return(False, "No user found")
@@ -83,12 +85,17 @@ class AnaAuthentication():
     user = self.getUserByName(username, True)
     if user != None:
       if user.password == password: user.password = newPassword; self.updateUser(user)
-
+      
   def getIdFromUsername(self, username):
     cmd = "SELECT id FROM users WHERE username=%s"
     self.cursor.execute(cmd, (username,))
     result = self.cursor.fetchall()
     print(result)
     return int(result[0][0])
+
+  def logUserOut(self, username):
+    user = self.getUserByName(username, True)
+    if user != None:
+      user.token = "NULL"; self.updateUser(user)
 
   #CREATE USER TABLE CREATION THINGY

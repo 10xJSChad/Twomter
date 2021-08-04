@@ -1,0 +1,28 @@
+<script src="/static/scripts/indexScripts.js"></script>
+
+<!doctype html>
+<html>
+  <head>
+    <title>Profile Settings</title>
+    <link rel="stylesheet" href="/static/stylesheets/styles.css">
+  </head>
+
+  <body>
+    <div class="topBar">
+      <a href="/"> <img class="logoImage" src="/static/assets/twomty.png"> </a>
+    </div>
+    <center>
+      <p class="center"><a href="/logout">Log out</a></p>
+    </center>
+    <div class="profileBox">
+      <p class="profileUsername">{{username}}</p>
+      <p class="profileBio">{{bio}}</p>
+      <form method="POST" action="/update_bio">
+        <p><textarea type="text" class="postTwomtBox" id="twomtBox" name="twomt"></textarea></p>
+        <p id="characterCountText">Characters left: 140</p>
+        <input type="hidden" name="profileUsername" value="{{username}}"/>
+        <p><input type="submit" id="postTwomtButton" value="Update Bio"></p>
+      </form>
+    </div>
+  </body>
+</html>

@@ -2,6 +2,7 @@
 window.addEventListener('load', function () {
     addListener('username')
     addListener('password')
+    let submitButton = document.getElementById('submit').disabled = true;
   })
 
   function addListener(element){

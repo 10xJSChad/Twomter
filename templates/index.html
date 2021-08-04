@@ -1,20 +1,28 @@
-<script src="../static/scripts/indexScripts.js"></script>
+<script src="/static/scripts/indexScripts.js"></script>
 
 <!doctype html>
 <html>
   <head>
     <title>Index</title>
-    <link rel="stylesheet" href="../static/stylesheets/styles.css">
+    <link rel="stylesheet" href="/static/stylesheets/styles.css">
   </head>
   
   <body>
     <div class="topBar">
-      <a href="/"> <img class="logoImage" src="../static/assets/twomty.png"> </a>
+      <a href="/"> <img class="logoImage" src="/static/assets/twomty.png"> </a>
     </div>
 
     <div class="mainContainer">
+      {% if username == None %}
+        <center>
+        <p class="center"><a href="/login">Login</a> | <a href="/register">Register</a></p>
+        </center>
+      {% endif %}
       <form method="POST" action="/handle_twomt">
         {% if username != None %}
+        <center>
+          <p class="center"><a href="/logout">Log out</a></p>
+        </center>
         <div class="postTwomtContainer">
           <h1>Welcome, <a href="/profile/{{username}}">{{username}}!</a></h1>
           <p><textarea type="text" class="postTwomtBox" id="twomtBox" name="twomt"></textarea></p>
