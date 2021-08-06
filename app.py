@@ -1,14 +1,13 @@
-from userClass import user
 from flask import Flask, render_template, request, redirect, url_for, make_response
 import sys
 import mysql.connector
-from AnaAuth import AnaAuth
-from Twomts import twomtsHandler
-import simpleHashSalt
+import Administration.Config as config
+from authentication import authentication, simpleHashSalt, userClass
+from twomts import twomtsHandler
 
 app = Flask(__name__)
-auth = AnaAuth.AnaAuthentication("localhost", "root", "", "twomter", True) 
-twomts = twomtsHandler.twomtsHandler("localhost", "root", "", "twomter", True) 
+auth = authentication.auth(config.host, config.user, config.password, config.database, config.autocommit)
+twomts = twomtsHandler.twomtsHandler(config.host, config.user, config.password, config.database, config.autocommit)
 
 def verifyTwomt(twomt):
     if len(twomt.replace(" ", "")) == 0: return False
@@ -126,10 +125,13 @@ def handle_registration():
     if isLoggedIn(): return index()
     username = request.values.get('username')
     password = request.values.get('password')
+    ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
     result = verifyRegistration(username, password)
-    if result[0] == True: createUserResult = auth.createUser(username, simpleHashSalt.hash(password))
-    if not createUserResult:
-        result = (False, "This username is already taken")
+    if result[0] == True: createUserResult = auth.createUser(username, simpleHashSalt.hash(password), ip)
+    if not createUserResult[0]:
+        failReasons = ["Username is already taken", "You are banned from Twomter"]
+        print(createUserResult)
+        result = (False, failReasons[createUserResult[1]])
     if result[0] == False:
         return render_template('register.html', result=result)
     else: return handle_login(username, simpleHashSalt.hash(password))
@@ -145,4 +147,5 @@ def update_bio():
 
 sys.path.append('/AnaAuth')
 sys.path.append('/Twomts')
+sys.path.append('/Administration')
 app.run(),

@@ -1,6 +1,6 @@
 from io import TextIOWrapper
 import mysql.connector
-import twomtsClass
+from twomts import twomtsClass
 from datetime import datetime
 
 class twomtsHandler():
@@ -55,3 +55,7 @@ class twomtsHandler():
 
         cmd = "INSERT INTO twomts (poster, content, replyTo, username) VALUES (%s, %s, %s, %s)"
         self.cursor.execute(cmd, (userID, content, replyTo, username))
+    
+    def deleteTwomt(self, id):
+        cmd = "DELETE FROM twomts WHERE id=%s"
+        self.cursor.execute(cmd, (id))

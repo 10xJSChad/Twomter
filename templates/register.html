@@ -10,7 +10,7 @@
     <div class="loginOrRegister">
         <form method="POST" action="handle_registration">
             {% if not result[0] %}
-                <p style='text-align: center'>Username already taken</p>
+                <p style='text-align: center'>{{result[1]}}</p>
             {% endif %}
             <p style='text-align: center'>Username</p>
             <p><input type="text" class="center" id="username" name="username"></p>
