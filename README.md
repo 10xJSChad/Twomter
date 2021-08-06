@@ -12,3 +12,19 @@ Twomter is made with Flask and MariaDB on the backend, and vanilla HTML/CSS/JS o
 * Basic password hashing & salting
 * User and IP ban system
 * Simple setup
+
+<h2>Requirements</h2>
+
+* [Flask](https://flask.palletsprojects.com/en/2.0.x/)
+* [mysql-connector](https://pypi.org/project/mysql-connector-python/)
+* A MySQL Server (I used MariaDB)
+
+<h2>Setting up Twomter</h2>
+
+1. Clone this repository
+2. Open Administration/Config.py and change the variables to match your SQL Server
+3. Run and follow along with Administration/Create Database.py
+4. Run app.py
+5. Connect to localhost:5000 and you're good to go!
+
+Once Twomter is set up, Administration/Console.py can be used to ban/unban users and IPs.
