@@ -1,4 +1,4 @@
-<h2>About Twomter</h2>
+<h2>Twomter</h2>
 Twomter is a simple project made with the goal of creating a Twitter clone, but in the style of late-90s/early-2000s message and imageboards.
 Unlike Twitter, you can not "re-tweet" posts, like posts, or follow other profiles.
 
