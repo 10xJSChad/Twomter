@@ -8,6 +8,7 @@ Twomter is made with Flask and MariaDB on the backend, and vanilla HTML/CSS/JS o
 
 * Finished posting system with timestamps & replies
 * Profile page with customizable bio
+* Client-side input validation for user convenience (server-side validation too, of course)
 * Basic administrator console
 * Basic password hashing & salting
 * User and IP ban system
